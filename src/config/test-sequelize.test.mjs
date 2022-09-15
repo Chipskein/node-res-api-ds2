@@ -1,13 +1,18 @@
-import {test} from 'vitest';
-import { CreateSequelizeInstance } from './sequelize'
+import {describe, expect, it} from 'vitest';
+import { CreateSequelizeInstance, InitSequelizeModels, RunAssociationFromDBModels } from './sequelize'
 
-test("Testando Sequelize com Sqlite",async ()=>{
+describe("Testando Sequelize",()=>{
     const db=CreateSequelizeInstance("test")
-    try {
-        await db.authenticate();
-        console.log('Connection has been established successfully.');
-      } 
-    catch (error) {
-        console.error('Unable to connect to the database:', error);
-    }
+    test("Testing Connection With Sqlite Database",()=>{
+        db.authenticate()
+            .then(data=>console.log("Passou"))
+            .catch(error=> expect(error).toBe(null))
+        ;
+    })
+    test('should first', () => { 
+        InitSequelizeModels(db)
+     })
+     test('should first', () => { 
+       RunAssociationFromDBModels(db)
+     })
 })

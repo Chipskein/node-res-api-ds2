@@ -1,7 +1,9 @@
 
 import  { Router } from  "express";
-let RouterUsers=Router()
-RouterUsers.post('/',(req,res)=>{
-
-});
-export default RouterUsers;
+let RouterAlbums=Router()
+RouterAlbums.post('/',(req,res)=>{});
+RouterAlbums.get('/',(req,res)=>{});
+RouterAlbums.get('/:id',(req,res)=>{});
+RouterAlbums.put('/:id',(req,res)=>{});
+RouterAlbums.delete('/:id',(req,res)=>{});
+export default RouterAlbums;

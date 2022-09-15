@@ -1,7 +1,12 @@
-
+import { Sequelize } from 'sequelize';
 import { config } from 'dotenv';
 config();
-import { Sequelize } from 'sequelize';
+import  Albums from '../entities/albums/model.mjs'
+import  Musics from '../entities/musics/model.mjs'
+import  Users  from '../entities/users/model.mjs'
+
+
+
 export function CreateSequelizeInstance(env="prod"){
     if(env!="prod"){
         return new Sequelize({
@@ -20,5 +25,17 @@ export function CreateSequelizeInstance(env="prod"){
     }
     return  new Sequelize(DATABASE_URL,DATABASE_CONFIG) 
 }
+export function InitSequelizeModels(db){
+    Albums.init(db)
+    Musics.init(db)
+    Users.init(db)
+}
 
-
+export function RunAssociationFromDBModels(db){
+    const { models } = db;
+    const modelNames=Object.keys(models)
+    modelNames.map(modelName=>{
+        const model=models[modelName]
+        model.associate(models)
+    })
+}

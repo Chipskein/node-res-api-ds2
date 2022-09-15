@@ -1,7 +1,9 @@
 
 import  { Router } from  "express";
-let RouterUsers=Router()
-RouterUsers.post('/',(req,res)=>{
-
-});
-export default RouterUsers;
+let RouterMusics=Router()
+RouterMusics.post('/',(req,res)=>{});
+RouterMusics.get('/',(req,res)=>{});
+RouterMusics.get('/:id',(req,res)=>{});
+RouterMusics.put('/:id',(req,res)=>{});
+RouterMusics.delete('/:id',(req,res)=>{});
+export default RouterMusics;
