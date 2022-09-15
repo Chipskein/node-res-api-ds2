@@ -1,10 +1,6 @@
-import express from 'express';
-import usersRoutes from './entities/users/routes.mjs';
-import albumsRoutes from './entities/albums/routes.mjs';
-import musicsRoutes from './entities/musics/routes.mjs';
+import { config } from 'dotenv';
+config();
+import { CreateAppInstace } from './app.mjs';
 const PORT=process.env.PORT || 3001;  
-const app = express();
-app.use("/users",usersRoutes)
-app.use("/albums",albumsRoutes)
-app.use("/musics",musicsRoutes)
+const app = CreateAppInstace()
 app.listen(PORT,() => console.log(`Listing on PORT ${PORT}`))

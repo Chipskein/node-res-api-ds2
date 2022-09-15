@@ -2,8 +2,6 @@ import {afterAll, describe, expect} from 'vitest';
 import Users from '../entities/users/model.mjs';
 import { CreateSequelizeInstance, InitSequelizeModels, RunAssociationFromDBModels } from './sequelize'
 import { unlink } from 'fs/promises'
-import path  from 'path'
-
 
 const db=CreateSequelizeInstance("test")
 describe("Testando Setup",()=>{
@@ -33,5 +31,6 @@ describe("Testando Models",()=>{
 })
 
 afterAll(async ()=>{
-    await unlink(path.join(__dirname, '../database', 'test-database.sqlite.db'),)
+    const database_path=db.options.storage
+    await unlink(database_path)
 })

@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize';
-import { config } from 'dotenv';
 import path  from 'path'
+import { unlink } from 'fs/promises';
+import { config } from 'dotenv';
 config();
+
 import Users from '../entities/users/model.mjs'
 import Albums from '../entities/albums/model.mjs'
 import Musics from '../entities/musics/model.mjs'
@@ -21,7 +23,7 @@ export function CreateSequelizeInstance(env){
     }
     return new Sequelize({
         dialect: 'sqlite',
-        storage: path.join(__dirname, '../database', 'test-database.sqlite.db'),
+        storage: path.join(__dirname, '../database', `test-database${Math.floor(Math.random()*9999)}.sqlite`),
         dialect: 'sqlite',
         logging: console.log
     })    
@@ -39,4 +41,15 @@ export function RunAssociationFromDBModels(db){
         const model=models[modelName]
         model.associate(models)
     })
+}
+export async function InitDatabaseTest(){
+    const db=CreateSequelizeInstance("test")
+    InitSequelizeModels(db)
+    RunAssociationFromDBModels(db)
+    await db.sync()
+    return db;
+}
+export async function RemoveDatabaseTest(db){
+    const database_path=db.options.storage
+    await unlink(database_path)
 }
