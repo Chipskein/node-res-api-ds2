@@ -1,0 +1,25 @@
+Users{
+    id
+    email
+    name
+    password
+    created
+    updated
+}
+Album{
+    id
+    name
+    release-date
+    author
+    created
+    updated
+}
+Music{
+    id
+    duration int(segundos)
+    name string
+    album
+    formatos
+    created
+    updated
+}
