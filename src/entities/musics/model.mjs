@@ -18,7 +18,7 @@ export default class Musics extends Model {
                 allowNull:false
             },
             formatos:{
-                type:DataTypes.ARRAY(DataTypes.STRING),
+                type:DataTypes.STRING,
                 allowNull:false
             },
         }
@@ -26,5 +26,6 @@ export default class Musics extends Model {
     }
     
     static associate(models) {
+        this.belongsTo(models.albums)
     }
 }

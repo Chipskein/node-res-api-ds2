@@ -17,12 +17,14 @@ export default class Albums extends Model {
                 allowNull:false
             },
             author:{
-                type:DataTypes.ARRAY(DataTypes.STRING),
+                type:DataTypes.STRING,
                 allowNull:false
             },
         }
         super.init(tableDefinition,tableConfig)
     }
     static associate(models) {
+        this.belongsTo(models.users)
+        this.hasMany(models.musics)
     }
 }

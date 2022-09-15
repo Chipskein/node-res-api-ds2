@@ -25,5 +25,6 @@ export default class Users extends Model {
     }
     
     static associate(models) {
+        this.hasMany(models.albums)       
     }
 }
