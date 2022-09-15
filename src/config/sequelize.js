@@ -1,11 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { config } from 'dotenv';
+import path  from 'path'
 config();
-import  Albums from '../entities/albums/model.mjs'
-import  Musics from '../entities/musics/model.mjs'
-import  Users  from '../entities/users/model.mjs'
-
-
 
 export function CreateSequelizeInstance(env="prod"){
     if(env=="prod"){
@@ -22,14 +18,22 @@ export function CreateSequelizeInstance(env="prod"){
     }
     return new Sequelize({
         dialect: 'sqlite',
-        storage: '../database/test-database.db'
+        storage: path.join(__dirname, '../database', 'test-database.sqlite.db'),
+        username: 'root',
+        password: 'root',
+        host: 'localhost',
+        dialect: 'sqlite',
+        logging: console.log
     })    
     
 }
 export function InitSequelizeModels(db){
-    Albums.init(db)
-    Musics.init(db)
-    Users.init(db)
+    const { models } = db;
+    const modelNames=Object.keys(models)
+    modelNames.map(modelName=>{
+        const model=models[modelName]
+        model.init(db)
+    })
 }
 
 export function RunAssociationFromDBModels(db){

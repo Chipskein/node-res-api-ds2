@@ -1,4 +1,4 @@
 node_modules
 .env
 yarn-error.log
-test-database.db
+test-database.sqlite.db
