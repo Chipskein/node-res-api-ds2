@@ -32,7 +32,6 @@ export function InitSequelizeModels(db){
    Albums.init(db)
    Musics.init(db)
 }
-
 export function RunAssociationFromDBModels(db){
     const { models } = db;
     const modelNames=Object.keys(models)
