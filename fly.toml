@@ -1,4 +1,4 @@
-# fly.toml file generated for node-rest-api-ds2 on 2022-09-16T18:15:22-03:00
+# fly.toml file generated for node-rest-api-ds2 on 2022-09-16T18:40:19-03:00
 
 app = "node-rest-api-ds2"
 kill_signal = "SIGINT"
