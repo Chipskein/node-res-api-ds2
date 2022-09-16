@@ -1,8 +1,16 @@
 import { Sequelize } from 'sequelize';
 import path  from 'path'
 import { unlink } from 'fs/promises';
+import {fileURLToPath} from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import { config } from 'dotenv';
 config();
+
+
+
+
 
 import Users from '../entities/users/model.mjs'
 import Albums from '../entities/albums/model.mjs'
