@@ -9,7 +9,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "nodemon ./src/indexmjs",
+    "dev": "nodemon ./src/index.mjs",
     "test": "vitest"
   },
   "dependencies": {
