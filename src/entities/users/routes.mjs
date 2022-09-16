@@ -1,8 +1,9 @@
 
 import  { Router } from  "express";
-import {CreateUser,ListUser,GetUser,UpdateUser,DeleteUser} from './controller.mjs'
+import {RegisterUser,LoginUser,ListUser,GetUser,UpdateUser,DeleteUser} from './controller.mjs'
 let RouterUsers=Router()
-RouterUsers.post('/',CreateUser);
+RouterUsers.post('/',RegisterUser);
+RouterUsers.post('/login',LoginUser);
 RouterUsers.get('/',ListUser);
 RouterUsers.get('/:id',GetUser);
 RouterUsers.put('/:id',UpdateUser);
