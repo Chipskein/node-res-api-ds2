@@ -21,6 +21,17 @@ export async function RegisterUser(req,res){
 }
 export function LoginUser(req,res){
     try{
+        const { name,email} = req.body
+        if(!name||!email){
+            throw Error({
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Invalid Body"
+            })
+        }
+
+
+
+        
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
