@@ -1,6 +1,6 @@
 import {afterAll, describe, expect} from 'vitest';
 import Users from '../entities/users/model.mjs';
-import { CreateSequelizeInstance, InitSequelizeModels, RunAssociationFromDBModels } from './sequelize'
+import { CreateSequelizeInstance,RunAssociationFromDBModels,InitSequelizeModels } from './sequelize'
 import { unlink } from 'fs/promises'
 
 const db=CreateSequelizeInstance("test")

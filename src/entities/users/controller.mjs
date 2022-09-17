@@ -11,7 +11,7 @@ export async function RegisterUser(req,res){
             })
         }
         const hashedpass=await hashPassword(password)
-
+        
         return res.status(HTTP_STATUS.OK).json({msg:"05_SUCCESS"})
     }
     catch(err){

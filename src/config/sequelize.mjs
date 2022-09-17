@@ -8,10 +8,6 @@ const __dirname = path.dirname(__filename);
 import { config } from 'dotenv';
 config();
 
-
-
-
-
 import Users from '../entities/users/model.mjs'
 import Albums from '../entities/albums/model.mjs'
 import Musics from '../entities/musics/model.mjs'
@@ -30,7 +26,7 @@ export function CreateSequelizeInstance(env){
         dialect: 'sqlite',
         storage: path.join(__dirname, '../database', `test-database${Math.floor(Math.random()*9999)}.sqlite`),
         dialect: 'sqlite',
-        logging: console.log
+        logging:false
     })    
     
 }
@@ -47,13 +43,17 @@ export function RunAssociationFromDBModels(db){
         model.associate(models)
     })
 }
-export async function InitDatabaseTest(){
-    const db=CreateSequelizeInstance("test")
+
+
+export function InitDatabase(db){
     InitSequelizeModels(db)
     RunAssociationFromDBModels(db)
-    await db.sync()
+    if(process.env.ENVIROMENT!='prod') return db;
+    //db.sync().then(data=>console.log("Database Sync")).catch(err=>console.log(err))
     return db;
 }
+
+
 export async function RemoveDatabaseTest(db){
     const database_path=db.options.storage
     await unlink(database_path)
