@@ -1,6 +1,6 @@
 
 import  { Router } from  "express";
-import { verifyToken } from "../../utils/middlewares.mjs";
+import { verifyToken } from "../../middlewares/auth.mjs";
 import {CreateMusic,ListMusic,GetMusic,UpdateMusic,DeleteMusic} from './controller.mjs'
 let RouterMusics=Router()
 RouterMusics.post('/',verifyToken,CreateMusic);

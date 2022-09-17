@@ -1,6 +1,6 @@
 
 import  { Router } from  "express";
-import { verifyToken } from "../../utils/middlewares.mjs";
+import { verifyToken } from "../../middlewares/auth.mjs";
 import { CreateAlbum, DeleteAlbum, GetAlbum, ListAlbum, UpdateAlbum } from './controller.mjs'
 let RouterAlbums=Router()
 RouterAlbums.post('/',verifyToken,CreateAlbum);

@@ -1,6 +1,6 @@
 
 import  { Router } from  "express";
-import { verifyToken } from "../../utils/middlewares.mjs";
+import { verifyToken } from "../../middlewares/auth.mjs";
 import {RegisterUser,LoginUser,ListUser,GetUser,UpdateUser,DeleteUser} from './controller.mjs'
 let RouterUsers=Router()
 
