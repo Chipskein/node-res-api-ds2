@@ -4,6 +4,7 @@ import {unlink} from 'fs/promises'
 import { CreateAppInstace } from '../../app.mjs'
 import { CreateSequelizeInstance } from '../../config/sequelize.mjs';
 import { HTTP_STATUS } from '../../config/http-status.mjs';
+import { verifyJWT } from '../../utils/token.mjs';
 const database=CreateSequelizeInstance("test")
 beforeAll(async ()=>{
     await database.sync()
@@ -26,6 +27,28 @@ describe("Testing Routes",()=>{
                 password,
             })
             expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
+    const LoginUsersTestTable=[
+        [null,"uma senha errada",HTTP_STATUS.UNAUTHORIZED],
+        [null,null,HTTP_STATUS.UNAUTHORIZED],
+        ["abfn0905@gmail.com","uma senha errada",HTTP_STATUS.UNAUTHORIZED],
+        ["abfn0905@gmail.com","123456",HTTP_STATUS.OK],
+        ["user@naoexiste.com.org","123456",HTTP_STATUS.UNAUTHORIZED],
+    ]
+
+    describe.each(LoginUsersTestTable)("Testing Login User email:%s password:%s",(email,password,expectedStatusCode)=>{
+        test("POST /users/login",async ()=>{
+            const res=await request(app).post('/users/login').send({
+                email,
+                password,
+            })
+            expect(res.statusCode).toBe(expectedStatusCode)
+            if(res.statusCode==HTTP_STATUS.OK){
+                const {body:{token}} = res
+                expect(token).toBeTypeOf("string");
+                expect(verifyJWT(token)).toBeDefined();
+            }
         })
     })
 })

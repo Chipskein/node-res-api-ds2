@@ -1,7 +1,9 @@
 import { HTTP_STATUS } from '../../config/http-status.mjs';
-import { hashPassword } from '../../utils/password.mjs';
+import { hashPassword,verifyPassword } from '../../utils/password.mjs';
 import { VerifyEmailSyntax } from '../../utils/email.mjs';
+import { createJWT } from '../../utils/token.mjs'
 import Users from './model.mjs';
+
 export async function RegisterUser(req,res){
     try{
         const { name,email,password } = req.body
@@ -38,19 +40,34 @@ export async function RegisterUser(req,res){
         return res.status(statusCode).json({ message: err.message})
     }
 }
-export function LoginUser(req,res){
+export async function LoginUser(req,res){
     try{
-        const { name,email} = req.body
-        if(!name||!email){
-            throw Error({
-                status:HTTP_STATUS.BAD_REQUEST,
-                message:"Invalid Body"
-            })
+        const { email,password} = req.body
+        if(!password||!email){
+            throw {
+                status:HTTP_STATUS.UNAUTHORIZED,
+                message:"Invalid Credentials"
+            }
+        }
+
+        const user=await Users.findOne({where:{email}})
+        if(!user){
+            throw {
+                status:HTTP_STATUS.UNAUTHORIZED,
+                message:"Invalid Credentials"
+            }
         }
 
 
-
-        
+        const {dataValues:{password:hashedpassword,id}}=user
+        if(!await verifyPassword(password,hashedpassword)){
+            throw {
+                status:HTTP_STATUS.UNAUTHORIZED,
+                message:"Invalid Credentials"
+            }
+        }
+        const token=createJWT({id,email})
+        return res.status(HTTP_STATUS.OK).json({token})
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
