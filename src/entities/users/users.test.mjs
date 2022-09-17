@@ -110,6 +110,23 @@ describe("Testing Routes",()=>{
             
         })
     })
+    const DeleteUsersTestTable=[
+        [createJWT({id:1,email:"abfn0905@gmail.com"}),HTTP_STATUS.OK],//1
+        [createJWT({id:2,email:"abfn09010@gmail.com"}),HTTP_STATUS.OK],//2
+        [createJWT({id:3,email:"abfn0906@gmail.com"}),HTTP_STATUS.OK],//3
+        [createJWT({id:4,email:"abfn0907@gmail.com"}),HTTP_STATUS.OK],//4
+        [createJWT({id:5,email:"abfn0908@gmail.com"}),HTTP_STATUS.OK],//5
+        [createJWT({id:6,email:"abfn0909@gmail.com"}),HTTP_STATUS.OK],//6
+        [createJWT({id:6,email:"abfn0909@gmail.com"}),HTTP_STATUS.UNAUTHORIZED],//6
+        [createJWT({id:1,email:"abfn0905@gmail.com"}),HTTP_STATUS.UNAUTHORIZED],//6
+    ]
+    describe.each(DeleteUsersTestTable)("Testing DELETE User name:%s password %s token:%s",(token,expectedStatusCode)=>{
+        test("DELETE /users/",async ()=>{
+            const res=await request(app).delete("/users/").set('authorization',token);
+            expect(res.statusCode).toBe(expectedStatusCode)
+            
+        })
+    })
 
 
 

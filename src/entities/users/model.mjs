@@ -25,6 +25,6 @@ export default class Users extends Model {
     }
     
     static associate(models) {
-        this.hasMany(models.albums)       
+        this.hasMany(models.albums,{onDelete:"cascade"})       
     }
 }

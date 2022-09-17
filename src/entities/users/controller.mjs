@@ -143,7 +143,9 @@ export async function UpdateUser(req,res){
 }
 export async function DeleteUser(req,res){
     try{
-        
+        const { id }=req.user;
+        await Users.destroy({where:{id}});
+        return res.status(HTTP_STATUS.OK).json({ message:"05_DELETED"});
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR

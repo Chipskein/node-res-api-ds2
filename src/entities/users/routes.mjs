@@ -11,5 +11,5 @@ RouterUsers.get('/',ListUser);
 RouterUsers.get('/:id',GetUser);
 
 RouterUsers.put('/',verifyToken,UpdateUser);
-RouterUsers.delete('/:id',verifyToken,DeleteUser);
+RouterUsers.delete('/',verifyToken,DeleteUser);
 export default RouterUsers;
