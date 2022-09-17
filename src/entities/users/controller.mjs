@@ -80,7 +80,7 @@ export async function ListUser(req,res){
         if(!offset) offset=0;
         if(!limit) limit=10;
         const users=[];
-        const {rows,count}=await Users.findAndCountAll()
+        const {rows,count}=await Users.findAndCountAll({limit,offset})
         rows.map(({dataValues})=>{
             users.push(dataValues);
         })
@@ -118,7 +118,23 @@ export async function GetUser(req,res){
 }
 export async function UpdateUser(req,res){
     try{
-        
+        const { id }=req.user;
+        const {name,password}=req.body;
+        if(!name&&!password){
+            throw {
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Missing Fields"
+            }
+        }
+        const updateObj={};
+        if(name){
+            updateObj.name=name
+        }
+        if(password){
+            updateObj.password=await hashPassword(password)
+        }
+        await Users.update(updateObj,{where: { id }});
+        return res.status(HTTP_STATUS.OK).json({msg:"05_UPDATED"})
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR

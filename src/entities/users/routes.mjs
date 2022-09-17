@@ -10,6 +10,6 @@ RouterUsers.post('/login',LoginUser);
 RouterUsers.get('/',ListUser);
 RouterUsers.get('/:id',GetUser);
 
-RouterUsers.put('/:id',verifyToken,UpdateUser);
+RouterUsers.put('/',verifyToken,UpdateUser);
 RouterUsers.delete('/:id',verifyToken,DeleteUser);
 export default RouterUsers;
