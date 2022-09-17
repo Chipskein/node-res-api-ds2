@@ -30,10 +30,12 @@ describe("Testing Albums Routes",()=>{
         expect(usersForTest.length).greaterThan(0);
     })
     const CreateAlbumsTest=[
-        [createJWT({id:1,email:"email@email.com"}),"album_name",new Date(),"should fail",[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name",new Date(),"should fail",[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","2020-09-02",["Jonh More"],[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name",new Date(),["random_author"],[],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","0000000","should fail",[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","2020-09-12","should fail",[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","2020-09-02",["Jonh More"],[],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","5000-09-02",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","string random",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name","20-09-2000",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
     ];
     describe.each(CreateAlbumsTest)("Testing Create Album ",(token,name,release_date,authors,musics,expectedStatusCode)=>{
         test("POST /albums/",async ()=>{

@@ -1,6 +1,7 @@
 import { HTTP_STATUS } from "../../config/http-status.mjs"
 import Musics from "../musics/model.mjs"
 import Albums from "./model.mjs"
+import {isAValidDate} from '../../utils/date.mjs'
 export async function CreateAlbum(req,res){
     try{
         const { id:userId }=req.user
@@ -11,7 +12,7 @@ export async function CreateAlbum(req,res){
                 msg:"Invalid fields"
             }
         }
-        if(!release_date instanceof Date){
+        if(!isAValidDate(release_date)){
             throw {
                 status:HTTP_STATUS.BAD_REQUEST,
                 msg:"Invalid Date"
