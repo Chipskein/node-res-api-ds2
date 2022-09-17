@@ -51,6 +51,45 @@ describe("Testing Routes",()=>{
             }
         })
     })
+
+    test("GET /users/",async ()=>{
+        const res=await request(app).get('/users/').send()
+        expect(res.statusCode).toBe(HTTP_STATUS.OK)
+        expect(res.body.count).toBeGreaterThanOrEqual(0);
+        expect(res.body.users.length).toBeGreaterThanOrEqual(0);
+    })
+    
+
+    const GetUsersTestTable=[
+        [12412,HTTP_STATUS.NOT_FOUND],
+        [99123,HTTP_STATUS.NOT_FOUND],
+        [9999,HTTP_STATUS.NOT_FOUND],
+        [9999,HTTP_STATUS.NOT_FOUND],
+        [915121,HTTP_STATUS.NOT_FOUND],
+        [1,HTTP_STATUS.OK],
+        [1.999999,HTTP_STATUS.BAD_REQUEST],
+        [1.00000,HTTP_STATUS.OK],
+        [1.12,HTTP_STATUS.BAD_REQUEST],
+    ]
+    describe.each(GetUsersTestTable)("Testing Get User Id:%d",(id,expectedStatusCode)=>{
+        test("GET /users/:id",async ()=>{
+            const res=await request(app).get(`/users/${id}`)
+            expect(res.statusCode).toBe(expectedStatusCode)
+            if(res.statusCode==HTTP_STATUS.OK){
+                expect(res.body.password).toBeUndefined()
+                expect(res.body.id).toBeDefined()
+                expect(res.body.name).toBeDefined()
+                expect(res.body.email).toBeDefined()
+                expect(res.body.createdAt).toBeDefined()
+                expect(res.body.updatedAt).toBeDefined()
+            }
+        })
+    })
+
+
+
+
+
 })
 
     

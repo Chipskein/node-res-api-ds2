@@ -76,7 +76,15 @@ export async function LoginUser(req,res){
 }
 export async function ListUser(req,res){
     try{
-        
+        let {offset,limit}=req.query
+        if(!offset) offset=0;
+        if(!limit) limit=10;
+        const users=[];
+        const {rows,count}=await Users.findAndCountAll()
+        rows.map(({dataValues})=>{
+            users.push(dataValues);
+        })
+        return res.status(HTTP_STATUS.OK).json({users,count})
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
@@ -85,7 +93,23 @@ export async function ListUser(req,res){
 }
 export async function GetUser(req,res){
     try{
-        
+        let { id } =req.params
+        id=parseFloat(id)
+        if(!id||Number.isNaN(id)||!Number.isInteger(id)){
+            throw {
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"INVALID USER ID, SHOULD BE A NUMBER"
+            }
+        }
+        const user=await Users.findByPk(id)
+        if(!user){
+            throw {
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"User Not Found"
+            }
+        }
+        const {dataValues:{name,email,createdAt,updatedAt}}= user
+        return res.status(HTTP_STATUS.OK).json({id,name,email,createdAt,updatedAt})
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
