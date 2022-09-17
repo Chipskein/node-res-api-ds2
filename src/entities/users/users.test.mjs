@@ -1,15 +1,14 @@
 import {beforeAll, describe,expect,test} from 'vitest'
 import request  from 'supertest'
-import {unlink} from 'fs/promises'
 import { CreateAppInstace } from '../../app.mjs'
 import { CreateSequelizeInstance, RemoveDatabaseTest } from '../../config/sequelize.mjs';
 import { HTTP_STATUS } from '../../config/http-status.mjs';
 import { createJWT, verifyJWT } from '../../utils/token.mjs';
 const database=CreateSequelizeInstance("test")
+const app=CreateAppInstace(database);
 beforeAll(async ()=>{
     await database.sync()
 })
-const app=CreateAppInstace(database);
 
 describe("Testing User Routes",()=>{
     const CreateUsersTestTable=[

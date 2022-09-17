@@ -37,7 +37,7 @@ export async function RegisterUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function LoginUser(req,res){
@@ -71,7 +71,7 @@ export async function LoginUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function ListUser(req,res){
@@ -89,7 +89,7 @@ export async function ListUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function GetUser(req,res){
@@ -114,7 +114,7 @@ export async function GetUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function UpdateUser(req,res){
@@ -139,7 +139,7 @@ export async function UpdateUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function DeleteUser(req,res){
@@ -150,6 +150,6 @@ export async function DeleteUser(req,res){
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
-        return res.status(statusCode).json({ message: err.message})
+        return res.status(statusCode).json({ msg: err.message})
     }
 }
