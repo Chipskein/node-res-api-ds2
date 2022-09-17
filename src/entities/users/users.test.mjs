@@ -2,7 +2,7 @@ import {beforeAll, describe,expect,test} from 'vitest'
 import request  from 'supertest'
 import {unlink} from 'fs/promises'
 import { CreateAppInstace } from '../../app.mjs'
-import { CreateSequelizeInstance } from '../../config/sequelize.mjs';
+import { CreateSequelizeInstance, RemoveDatabaseTest } from '../../config/sequelize.mjs';
 import { HTTP_STATUS } from '../../config/http-status.mjs';
 import { createJWT, verifyJWT } from '../../utils/token.mjs';
 const database=CreateSequelizeInstance("test")
@@ -11,7 +11,7 @@ beforeAll(async ()=>{
 })
 const app=CreateAppInstace(database);
 
-describe("Testing Routes",()=>{
+describe("Testing User Routes",()=>{
     const CreateUsersTestTable=[
         ["brunao","eaiman","fklajsfkasjfkas",HTTP_STATUS.BAD_REQUEST],
         [null,null,null,HTTP_STATUS.BAD_REQUEST],
@@ -133,14 +133,8 @@ describe("Testing Routes",()=>{
 
 })
 
-    
-    
-
-
-
 afterAll(async ()=>{
-    const database_path=database.options.storage
-    await unlink(database_path)
+    await RemoveDatabaseTest(database);
 })
 
 

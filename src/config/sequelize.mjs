@@ -15,19 +15,17 @@ import Musics from '../entities/musics/model.mjs'
 export function CreateSequelizeInstance(env){
     if(env=="prod"){
         const DATABASE_URL=process.env.DATABASE_URL;
-        const DATABASE_CONFIG={
-            dialectOptions: {
-             
-            },
-        }
-        return  new Sequelize(DATABASE_URL,DATABASE_CONFIG) 
+        return  new Sequelize(DATABASE_URL);
     }
-    return new Sequelize({
-        dialect: 'sqlite',
-        storage: path.join(__dirname, '../database', `test-database${Math.floor(Math.random()*9999)}.sqlite`),
-        dialect: 'sqlite',
-        logging:false
-    })    
+    if(env=="dev"){
+        return new Sequelize({
+            dialect: 'sqlite',
+            storage: path.join(__dirname, '../database', `dev-database.sqlite`),
+            dialect: 'sqlite',
+            logging:console.log
+        })
+    }
+        
     
 }
 export function InitSequelizeModels(db){
@@ -45,11 +43,11 @@ export function RunAssociationFromDBModels(db){
 }
 
 
-export function InitDatabase(db){
+export async function InitDatabase(db){
     InitSequelizeModels(db)
     RunAssociationFromDBModels(db)
-    if(process.env.ENVIROMENT!='prod') return db;
-    //db.sync().then(data=>console.log("Database Sync")).catch(err=>console.log(err))
+    if(process.env.ENVIROMENT!='prod'&&process.env.ENVIROMENT!='dev') return db;
+    (async ()=>await db.sync())();
     return db;
 }
 
