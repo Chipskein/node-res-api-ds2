@@ -82,7 +82,8 @@ export async function ListUser(req,res){
         const users=[];
         const {rows,count}=await Users.findAndCountAll({limit,offset})
         rows.map(({dataValues})=>{
-            users.push(dataValues);
+            const {id,email,name,createdAt,updatedAt}=dataValues
+            users.push({id,email,name,createdAt,updatedAt});
         })
         return res.status(HTTP_STATUS.OK).json({users,count})
     }

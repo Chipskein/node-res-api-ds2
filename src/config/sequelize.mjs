@@ -25,6 +25,12 @@ export function CreateSequelizeInstance(env){
             logging:console.log
         })
     }
+    return new Sequelize({
+        dialect: 'sqlite',
+        storage: path.join(__dirname, '../database', `test-database${Math.floor(Math.random()*9999)}.sqlite`),
+        dialect: 'sqlite',
+        logging:false
+    })    
         
     
 }
