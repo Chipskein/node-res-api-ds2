@@ -7,5 +7,5 @@ RouterAlbums.post('/',verifyToken,CreateAlbum);
 RouterAlbums.get('/',verifyToken,ListAlbum);
 RouterAlbums.get('/:id',verifyToken,GetAlbum);
 RouterAlbums.put('/:id',verifyToken,UpdateAlbum);
-RouterAlbums.delete('/:id',verifyToken,DeleteAlbum);
+RouterAlbums.delete('/',verifyToken,DeleteAlbum);
 export default RouterAlbums;

@@ -166,7 +166,6 @@ export async function UpdateAlbum(req,res){
         if(release_date)updateObj.release_date=release_date;
         if(authors) updateObj.authors=authors.join(',');
         const {dataValues:album}=await foundAlbum.update(updateObj)
-        console.log(album)
         return res.status(HTTP_STATUS.OK).json({album});
     }
     catch(err){
@@ -175,4 +174,40 @@ export async function UpdateAlbum(req,res){
     }
 }
 export async function DeleteAlbum(req,res){
+    try{
+        const {id:userId}=req.user
+        const { id }=req.body;
+        if(!id){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Album ID has not sent"
+            }
+        }
+        if(id&&typeof id!='number'){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Album ID should be a number"
+            }
+        }
+        const foundAlbum=await Albums.findByPk(id)
+        if(!foundAlbum){
+            throw{
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"Album not found"
+            }
+        }
+        const {dataValues:{userId:albumOwnerId}}=foundAlbum;
+        if(userId!=albumOwnerId){
+            throw{
+                status:HTTP_STATUS.FORBIDDEN,
+                message:"You Are not owner of this album"
+            }
+        }
+        await foundAlbum.destroy()
+        return res.status(HTTP_STATUS.OK).json({msg:"05_DELETED"});
+    }
+    catch(err){
+        let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
+        return res.status(statusCode).json({ msg: err.message})
+    }
 }

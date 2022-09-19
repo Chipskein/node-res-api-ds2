@@ -116,6 +116,24 @@ describe("Testing Albums Routes",()=>{
 
 
 
+    const DeleteAlbumsTestTable=[
+        [{},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:null},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:99999},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [{id:"string"},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:2},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.FORBIDDEN],
+        [{id:1},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [{id:1},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+    ]
+    describe.each(DeleteAlbumsTestTable)("Testing Delete Album Body:%j",(body,token,expectedStatusCode)=>{
+        test("DELETE /albums/",async ()=>{
+            const res=await request(app).delete(`/albums/`).send(body).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
+
+
+
 
 
 
