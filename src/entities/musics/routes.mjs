@@ -7,5 +7,5 @@ RouterMusics.post('/',verifyToken,CreateMusic);
 RouterMusics.get('/',verifyToken,ListMusic);
 RouterMusics.get('/:id',verifyToken,GetMusic);
 RouterMusics.put('/:id',verifyToken,UpdateMusic);
-RouterMusics.delete('/:id',verifyToken,DeleteMusic);
+RouterMusics.delete('/',verifyToken,DeleteMusic);
 export default RouterMusics;
