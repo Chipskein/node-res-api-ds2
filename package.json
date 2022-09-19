@@ -11,7 +11,7 @@
   "scripts": {
     "start": "node ./src/index.mjs",
     "dev": "nodemon ./src/index.mjs",
-    "test": "vitest"
+    "test": "vitest --reporter verbose"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
