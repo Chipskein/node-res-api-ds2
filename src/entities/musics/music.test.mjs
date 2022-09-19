@@ -67,7 +67,7 @@ describe("Testing Musics Routes",()=>{
         [createJWT({id:1,email:"email@email.com"}),{name:"testando4",duration:123,formats:['ogg'],authors:null,albumId:1},HTTP_STATUS.OK],
     ];
 
-    describe.each(CreateMusicsTest)("Testing Create Album ",(token,body,expectedStatusCode)=>{
+    describe.each(CreateMusicsTest)("Testing Create Album \ntoken:%s\n \nbody:%j\n",(token,body,expectedStatusCode)=>{
         test("POST /musics/",async ()=>{
             const res=await request(app).post('/musics').send(body).set('Authorization',token)
             expect(res.statusCode).toBe(expectedStatusCode)
