@@ -51,6 +51,25 @@ describe("Testing Musics Routes",()=>{
         expect(albums.length).greaterThan(0);
     })
 
+    const CreateMusicsTest=[
+        [createJWT({id:1,email:"email@email.com"}),{name:null,duration:null,formats:null,authors:null,albumId:null},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:2,email:"email2@email.com"}),{name:"testando",duration:123,formats:['ogg'],authors:null,albumId:1},HTTP_STATUS.FORBIDDEN],
+        [createJWT({id:1,email:"email@email.com"}),{name:"testando",duration:123,formats:['ogg'],authors:null,albumId:1},HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),{name:{},duration:123,formats:['ogg'],authors:null,albumId:1},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),{name:"fasfasf",duration:{"falhe":1},formats:['ogg'],authors:null,albumId:1},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),{name:"f",duration:123,formats:[],authors:null,albumId:1},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),{name:"f",duration:123,formats:["ogg"],authors:[],albumId:1},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),{name:"f",duration:123,formats:["ogg"],authors:["fasfasf"],albumId:null},HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),{name:"f",duration:123,formats:["ogg"],authors:["fasfasf"],albumId:9999999},HTTP_STATUS.NOT_FOUND],
+        [createJWT({id:2,email:"email2@email.com"}),{name:"testando",duration:123,formats:['ogg'],authors:null,albumId:3},HTTP_STATUS.FORBIDDEN],
+    ];
+
+    describe.each(CreateMusicsTest)("Testing Create Album ",(token,body,expectedStatusCode)=>{
+        test("POST /musics/",async ()=>{
+            const res=await request(app).post('/musics').send(body).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
 
 })
 
