@@ -35,6 +35,7 @@ describe("Testing Albums Routes",()=>{
         [createJWT({id:1,email:"email@email.com"}),"album_name3","0000000","should fail",[],HTTP_STATUS.BAD_REQUEST],
         [createJWT({id:1,email:"email@email.com"}),"album_name4","2020-09-12","should fail",[],HTTP_STATUS.BAD_REQUEST],
         [createJWT({id:1,email:"email@email.com"}),"album_name5","2020-09-02",["Jonh More"],[],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name5","2020-09-02",["Jonh More"],null,HTTP_STATUS.OK],
         [createJWT({id:1,email:"email@email.com"}),"album_name6","5000-09-02",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
         [createJWT({id:1,email:"email@email.com"}),"album_name7","string random",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
         [createJWT({id:1,email:"email@email.com"}),"album_name8","20-09-2000",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
@@ -84,7 +85,7 @@ describe("Testing Albums Routes",()=>{
         [6,HTTP_STATUS.OK],
         [7,HTTP_STATUS.OK],
         [8,HTTP_STATUS.OK],
-        [9,HTTP_STATUS.NOT_FOUND],
+        [9999999,HTTP_STATUS.NOT_FOUND],
     ]
     describe.each(GetUsersTestTable)("Testing Get Album Id:%d",(id,expectedStatusCode)=>{
         test("GET /albums/:id",async ()=>{

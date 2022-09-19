@@ -26,7 +26,7 @@ export async function CreateAlbum(req,res){
             authors:authors.join(','),
             userId
         })
-        if(musics.length==0){
+        if(musics&&musics.length==0||!musics){
             return res.status(HTTP_STATUS.OK).json({album})
         }
         const ValidMusics=[];
@@ -113,7 +113,6 @@ export async function GetAlbum(req,res){
         fullmusics.map(({dataValues})=>musics.push(dataValues));
         album.user=user;
         album.musics=musics;
-        console.log(album);
         return res.status(HTTP_STATUS.OK).json({album});
     }
     catch(err){
