@@ -83,7 +83,7 @@ describe("Testing Musics Routes",()=>{
         expect(res.body.musics.length).toBeGreaterThanOrEqual(0);
     })
 
-    const GetAlbumsTestTable=[
+    const GetMusicsTestTable=[
         [12431241,HTTP_STATUS.NOT_FOUND],
         [2.5,HTTP_STATUS.BAD_REQUEST],
         ["asfafsa",HTTP_STATUS.BAD_REQUEST],
@@ -94,10 +94,47 @@ describe("Testing Musics Routes",()=>{
         [4,HTTP_STATUS.OK],
         [99999,HTTP_STATUS.NOT_FOUND],
     ]
-    describe.each(GetAlbumsTestTable)("Testing Get Music Id:%d",(id,expectedStatusCode)=>{
+    describe.each(GetMusicsTestTable)("Testing Get Music Id:%d",(id,expectedStatusCode)=>{
         test("GET /musics/:id",async ()=>{
             const token=createJWT({id:1,email:"email@email.com"})
             const res=await request(app).get(`/musics/${id}`).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
+
+    const UpdateMusicsTestTable=[
+        [null,{},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [999999,{name:null,duration:null,formats:null,authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [999999,{name:"tentando alterar nome",duration:null,formats:null,authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [1,{name:"tentando alterar nome deveria bloquear",duration:null,formats:null,authors:null},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.FORBIDDEN],
+        [1,{name:"tentando alterar nome",duration:null,formats:null,authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [1,{name:"tentando alterar nome",duration:"fasfasf",formats:null,authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [1,{name:"tentando alterar nome",duration:124124,formats:[],authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [1,{name:"tentando alterar nome",duration:124124,formats:["wav","mov"],authors:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [1,{name:"tentando alterar nome",duration:124124,formats:["wav","mov"],authors:[]},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [1,{name:"tentando alterar nome",duration:124124,formats:["wav","mov"],authors:["autor random"]},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [1,{id:22,name:"tentando alterar nome",duration:124124,formats:["wav","mov"],authors:["autor random"]},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [1,{name:"tentando alterar nome",duration:124124,formats:["wav","mov"],authors:["autor random"],},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [1,{albumId:29,},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [1,{albumId:4,},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [1,{albumId:2,},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.FORBIDDEN],
+        [1,{albumId:"fasfasfasf"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+            
+    ]
+    describe.each(UpdateMusicsTestTable)("Testing Update Music \nId:%d\n \nBody:%j\n \ntoken:%s\n \nstatusCode:%d\n",(id,body,token,expectedStatusCode)=>{
+        test("PUT /musics/:id",async ()=>{
+            const res=await request(app).put(`/musics/${id}`).send(body).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
+
+
+
+    const DeleteMusicsTestTable=[
+    ]
+    describe.each(DeleteMusicsTestTable)("Testing Delete Music \nBody:%j\n \ntoken:%s\n \nstatusCode:%d\n",(body,token,expectedStatusCode)=>{
+        test("DELETE /musics/",async ()=>{
+            const res=await request(app).delete(`/musics/`).send(body).set('Authorization',token)
             expect(res.statusCode).toBe(expectedStatusCode)
         })
     })

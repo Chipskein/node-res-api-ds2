@@ -159,7 +159,103 @@ export async function GetMusic(req,res){
 export async function UpdateMusic(req,res){
     try{
         const {id:userId}=req.user
-        return res.status(HTTP_STATUS.OK).json({msg:""});
+        let { id:musicId } =req.params
+        const {id,name,authors,duration,formats,albumId} = req.body
+        if(id){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Can't Update ID field"
+            }
+        }
+        if(!name&&!authors&&!duration&&!formats&&!albumId){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"There are no updateble fields in body request"
+            }
+        }
+        if(name&&typeof name!='string'){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Name Field Should be a string"
+            }
+        }
+        if(duration&&!Number.isInteger(parseFloat(duration))){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Duration Field should be a number"
+            }
+        }
+        if(albumId&&!Number.isInteger(parseFloat(albumId))){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"albumId Field should be a number"
+            }
+        }
+        if(formats&&!Array.isArray(formats)){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Formats Fields Should be an array of strings"
+            }
+        }
+        if(formats&&formats.length==0){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Formats Field should not be empty"
+            }
+        }
+        if(authors&&!Array.isArray(authors)){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Authors Field should be an array of strings"
+            }
+        }
+        if(authors&&authors.length==0){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Authors is empty"
+            }
+        }
+        const foundMusic= await Musics.findByPk(musicId,{include:{model:Albums,include:Users}})
+        if(!foundMusic){
+            throw{
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"Music Not Found"
+            }
+        }
+        const {dataValues:{album:fullalbum}}=foundMusic;
+        const {dataValues:album}=fullalbum;
+        const {userId:albumOwnerId}=album;
+        if(userId!=albumOwnerId){
+            throw{
+                status:HTTP_STATUS.FORBIDDEN,
+                message:"You Are not owner of this resource"
+            }
+        }
+        const updateObj={};
+        if(name) updateObj.name=name;
+        if(duration) updateObj.duration=duration;
+        if(formats) updateObj.formats=formats.join(',');
+        if(authors) updateObj.authors=authors.join(',');
+        if(albumId){
+            const foundnewAlbum = await Albums.findByPk(albumId);
+            if(!foundnewAlbum){
+                throw{
+                    status:HTTP_STATUS.NOT_FOUND,
+                    message:"Could Not Found new Album resource"
+                }
+            }
+            const {dataValues:newAlbum}=foundnewAlbum
+            const {userId:albumOwnerId}=newAlbum;
+            if(userId!=albumOwnerId){
+                throw{
+                    status:HTTP_STATUS.FORBIDDEN,
+                    message:"You are not owner of new Album to move the music file"
+                }
+            }
+            updateObj.albumId=albumId;
+        }
+        const music=await foundMusic.update(updateObj);
+        return res.status(HTTP_STATUS.OK).json({music});
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
