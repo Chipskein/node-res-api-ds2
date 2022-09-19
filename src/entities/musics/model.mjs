@@ -9,7 +9,6 @@ export default class Musics extends Model {
         }
         const tableDefinition={
             duration:{
-                //segundos
                 type:DataTypes.BIGINT,
                 allowNull:false
             },
@@ -17,9 +16,13 @@ export default class Musics extends Model {
                 type:DataTypes.STRING,
                 allowNull:false
             },
-            formatos:{
+            formats:{
                 type:DataTypes.STRING,
                 allowNull:false
+            },
+            authors:{
+                type:DataTypes.STRING,
+                allowNull:true
             },
         }
         super.init(tableDefinition,tableConfig)

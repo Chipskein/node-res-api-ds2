@@ -16,7 +16,7 @@ export default class Albums extends Model {
                 type:DataTypes.DATE,
                 allowNull:false
             },
-            author:{
+            authors:{
                 type:DataTypes.STRING,
                 allowNull:false
             },

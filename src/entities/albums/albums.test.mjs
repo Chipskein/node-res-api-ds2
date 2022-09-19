@@ -30,12 +30,22 @@ describe("Testing Albums Routes",()=>{
         expect(usersForTest.length).greaterThan(0);
     })
     const CreateAlbumsTest=[
-        [createJWT({id:1,email:"email@email.com"}),"album_name","0000000","should fail",[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","2020-09-12","should fail",[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","2020-09-02",["Jonh More"],[],HTTP_STATUS.OK],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","5000-09-02",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","string random",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
-        [createJWT({id:1,email:"email@email.com"}),"album_name","20-09-2000",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:3,email:"email@email.com"}),"album_name2",new Date(),["invalids user"],[],HTTP_STATUS.UNAUTHORIZED],
+        [createJWT({id:1,email:"email@email.com"}),null,"0000000","should fail",[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name3","0000000","should fail",[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name4","2020-09-12","should fail",[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name5","2020-09-02",["Jonh More"],[],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name6","5000-09-02",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name7","string random",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name8","20-09-2000",["random_author"],[],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],"faksfjkasjf",HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:"musicteste",duration:104,formats:['ogg','mp3']}],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:"musicteste",duration:104,formats:['ogg','mp3'],authors:["joselito"]}],HTTP_STATUS.OK],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:"musicteste",duration:104,formats:412412412,authors:["joselito"]}],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:null,duration:{},formats:412412412,authors:"null"}],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:"musicteste",duration:["should be a number"],formats:['ogg'],authors:["joselito"]}],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:"musicteste",duration:1.534,formats:['ogg'],authors:["joselito"]}],HTTP_STATUS.BAD_REQUEST],
+        [createJWT({id:1,email:"email@email.com"}),"album_name9","2020-09-02",["Jonh More"],[{name:null,duration:50,formats:['ogg'],authors:["joselito"]}],HTTP_STATUS.BAD_REQUEST],
     ];
     describe.each(CreateAlbumsTest)("Testing Create Album ",(token,name,release_date,authors,musics,expectedStatusCode)=>{
         test("POST /albums/",async ()=>{
@@ -49,6 +59,40 @@ describe("Testing Albums Routes",()=>{
         })
     })
 
+    test("GET /albums/",async ()=>{
+        const token=createJWT({id:1,email:"email@email.com"})
+        const res=await request(app).get('/albums/').send().set('Authorization',token)
+        expect(res.statusCode).toBe(HTTP_STATUS.OK)
+        expect(res.body.count).toBeGreaterThanOrEqual(0);
+        expect(res.body.albums.length).toBeGreaterThanOrEqual(0);
+    })
+
+    const GetUsersTestTable=[
+        [12412,HTTP_STATUS.NOT_FOUND],
+        [99123,HTTP_STATUS.NOT_FOUND],
+        [9999,HTTP_STATUS.NOT_FOUND],
+        [9999,HTTP_STATUS.NOT_FOUND],
+        [915121,HTTP_STATUS.NOT_FOUND],
+        [1,HTTP_STATUS.OK],
+        [1.999999,HTTP_STATUS.BAD_REQUEST],
+        [1.00000,HTTP_STATUS.OK],
+        [1.12,HTTP_STATUS.BAD_REQUEST],
+        [2,HTTP_STATUS.OK],
+        [3,HTTP_STATUS.OK],
+        [4,HTTP_STATUS.OK],
+        [5,HTTP_STATUS.OK],
+        [6,HTTP_STATUS.OK],
+        [7,HTTP_STATUS.OK],
+        [8,HTTP_STATUS.OK],
+        [9,HTTP_STATUS.NOT_FOUND],
+    ]
+    describe.each(GetUsersTestTable)("Testing Get Album Id:%d",(id,expectedStatusCode)=>{
+        test("GET /albums/:id",async ()=>{
+            const token=createJWT({id:1,email:"email@email.com"})
+            const res=await request(app).get(`/albums/${id}`).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
 
 
 })
