@@ -75,15 +75,37 @@ export async function CreateMusic(req,res){
         return res.status(HTTP_STATUS.OK).json({music});
     }
     catch(err){
-        console.log(err);
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
         return res.status(statusCode).json({ msg: err.message})
     }
 }
 export async function ListMusic(req,res){
     try{
-        const {id:userId}=req.user
-        return res.status(HTTP_STATUS.OK).json({msg:""});
+        let {offset,limit}=req.query
+        if(!offset) offset=0;
+        if(!limit) limit=10;
+        const musics=[];
+        const {rows,count}=await Musics.findAndCountAll({limit,offset,include:[{model:Albums,include:[Users]}]});
+        rows.map(({dataValues})=>{
+            let { id,name,release_date,formats,duration,authors,createdAt,updatedAt,album:fullalbum}=dataValues
+            const {dataValues:album}=fullalbum
+            const {user:fulluser}=album
+            const {dataValues:user}=fulluser
+            delete(user.password);
+            album.user=user;
+            musics.push({
+                id,
+                name,
+                release_date,
+                formats:formats&&formats.length>0 ? formats.split(','):null,
+                duration,
+                authors:authors&&authors.length>0 ? authors.split(','):null,
+                createdAt,
+                updatedAt,
+                album
+            })
+        })
+        return res.status(HTTP_STATUS.OK).json({musics,count});
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
@@ -93,8 +115,41 @@ export async function ListMusic(req,res){
 }
 export async function GetMusic(req,res){
     try{
-        const {id:userId}=req.user
-        return res.status(HTTP_STATUS.OK).json({msg:""});
+        let { id } =req.params
+        id=parseFloat(id)
+        if(!id||Number.isNaN(id)||!Number.isInteger(id)){
+            throw {
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"INVALID Music ID, SHOULD BE A NUMBER"
+            }
+        }
+        let fullMusic=await Musics.findByPk(id,{include:[{model:Albums,include:[Users]}]})
+        if(!fullMusic){
+            throw {
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"Music Not Found"
+            }
+        }
+        let {dataValues:{name,release_date,formats,duration,authors,createdAt,updatedAt,album:fullalbum}}=fullMusic;
+        const {dataValues:album}=fullalbum
+        const {user:fulluser}=album
+        const {dataValues:user}=fulluser
+        delete(user.password);
+        album.user=user;
+        const music={
+            id,
+            name,
+            release_date,
+            formats:formats&&formats.length>0 ? formats.split(','):null,
+            duration,
+            authors:authors&&authors.length>0 ? authors.split(','):null,
+            createdAt,
+            updatedAt,
+            album
+        }
+        
+
+        return res.status(HTTP_STATUS.OK).json({music});
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
