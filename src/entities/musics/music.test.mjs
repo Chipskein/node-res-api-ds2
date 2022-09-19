@@ -131,6 +131,16 @@ describe("Testing Musics Routes",()=>{
 
 
     const DeleteMusicsTestTable=[
+        [{id:2},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.FORBIDDEN],
+        [{id:1},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [{id:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:"fasfasfasfa"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:8195815871025870125},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [{id:81958.15871025870125},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [{id:{}},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [{id:1},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [{id:2},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [{id:3},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
     ]
     describe.each(DeleteMusicsTestTable)("Testing Delete Music \nBody:%j\n \ntoken:%s\n \nstatusCode:%d\n",(body,token,expectedStatusCode)=>{
         test("DELETE /musics/",async ()=>{

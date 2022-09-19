@@ -265,7 +265,35 @@ export async function UpdateMusic(req,res){
 export async function DeleteMusic(req,res){
     try{
         const {id:userId}=req.user
-        return res.status(HTTP_STATUS.OK).json({msg:""});
+        const { id }=req.body;
+        if(!id){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Music ID has not sent"
+            }
+        }
+        if(id&&typeof id!='number'){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Music ID should be a number"
+            }
+        }
+        const foundMusic=await Musics.findByPk(id,{include:Albums})
+        if(!foundMusic){
+            throw{
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"Music not found"
+            }
+        }
+        const {dataValues:{album:{userId:albumOwnerId}}}=foundMusic;;
+        if(userId!=albumOwnerId){
+            throw{
+                status:HTTP_STATUS.FORBIDDEN,
+                message:"You Are not owner of this music"
+            }
+        }
+        await foundMusic.destroy()
+        return res.status(HTTP_STATUS.OK).json({msg:"05_DELETED"});
     }
     catch(err){
         let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
