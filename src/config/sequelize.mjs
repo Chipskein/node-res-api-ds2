@@ -53,7 +53,7 @@ export async function InitDatabase(db){
     InitSequelizeModels(db)
     RunAssociationFromDBModels(db)
     if(process.env.ENVIROMENT!='prod'&&process.env.ENVIROMENT!='dev') return db;
-    (async ()=>await db.sync({force:true}))();
+    (async ()=>await db.sync())();
     return db;
 }
 
