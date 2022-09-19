@@ -121,6 +121,58 @@ export async function GetAlbum(req,res){
     }
 }
 export async function UpdateAlbum(req,res){
+    try{
+        let { id:albumId } =req.params
+        const {id,name,authors,release_date} = req.body
+        if(id){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Can't Update ID field"
+            }
+        }
+        if(!name&&!authors&&!release_date){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"There are no updateble fields in body request"
+            }
+        }
+        if(name&&typeof name!='string'){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"name field should be a string"
+            }
+        }
+        if(authors&&!Array.isArray(authors)){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"Authors should be a array of strings"
+            }
+        }
+        if(release_date&&!isAValidDate(release_date)){
+            throw{
+                status:HTTP_STATUS.BAD_REQUEST,
+                message:"release_date should be a valid date"
+            }
+        }
+        const foundAlbum= await Albums.findByPk(albumId)
+        if(!foundAlbum){
+            throw{
+                status:HTTP_STATUS.NOT_FOUND,
+                message:"Album Not Found"
+            }
+        }
+        const updateObj={};
+        if(name) updateObj.name=name;
+        if(release_date)updateObj.release_date=release_date;
+        if(authors) updateObj.authors=authors.join(',');
+        const {dataValues:album}=await foundAlbum.update(updateObj)
+        console.log(album)
+        return res.status(HTTP_STATUS.OK).json({album});
+    }
+    catch(err){
+        let statusCode=err.status || HTTP_STATUS.INTERNAL_ERROR
+        return res.status(statusCode).json({ msg: err.message})
+    }
 }
 export async function DeleteAlbum(req,res){
 }

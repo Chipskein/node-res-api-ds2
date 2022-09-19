@@ -68,7 +68,7 @@ describe("Testing Albums Routes",()=>{
         expect(res.body.albums.length).toBeGreaterThanOrEqual(0);
     })
 
-    const GetUsersTestTable=[
+    const GetAlbumsTestTable=[
         [12412,HTTP_STATUS.NOT_FOUND],
         [99123,HTTP_STATUS.NOT_FOUND],
         [9999,HTTP_STATUS.NOT_FOUND],
@@ -87,13 +87,43 @@ describe("Testing Albums Routes",()=>{
         [8,HTTP_STATUS.OK],
         [9999999,HTTP_STATUS.NOT_FOUND],
     ]
-    describe.each(GetUsersTestTable)("Testing Get Album Id:%d",(id,expectedStatusCode)=>{
+    describe.each(GetAlbumsTestTable)("Testing Get Album Id:%d",(id,expectedStatusCode)=>{
         test("GET /albums/:id",async ()=>{
             const token=createJWT({id:1,email:"email@email.com"})
             const res=await request(app).get(`/albums/${id}`).set('Authorization',token)
             expect(res.statusCode).toBe(expectedStatusCode)
         })
     })
+
+    const UpdateAlbumsTestTable=[
+        [999999,{name:"alterando"},HTTP_STATUS.NOT_FOUND],
+        [1,{name:"alterando nome",authors:["jonh teste",'jong yonk pyo'],release_date:new Date()},HTTP_STATUS.OK],
+        [2,{name:"alterando nome2",authors:124124,release_date:new Date()},HTTP_STATUS.BAD_REQUEST],
+        [2,{name:"alterando nome2",authors:[],release_date:new Date()},HTTP_STATUS.OK],
+        [2,{name:"alterando nome2",authors:['lero lero'],release_date:12412412412412},HTTP_STATUS.BAD_REQUEST],
+        [2,{name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.OK],
+        [2,{id:2,name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.BAD_REQUEST],
+        [2,{id:null,name:124124,authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.BAD_REQUEST],
+        [2,{name:null,authors:null,release_date:null},HTTP_STATUS.BAD_REQUEST],
+    ]
+    describe.each(UpdateAlbumsTestTable)("Testing Update Album Id:%d Body:%j",(id,body,expectedStatusCode)=>{
+        test("PUT /albums/:id",async ()=>{
+            const token=createJWT({id:1,email:"email@email.com"})
+            const res=await request(app).put(`/albums/${id}`).send(body).set('Authorization',token)
+            expect(res.statusCode).toBe(expectedStatusCode)
+        })
+    })
+
+
+
+
+
+
+
+
+
+
+
 
 
 })
