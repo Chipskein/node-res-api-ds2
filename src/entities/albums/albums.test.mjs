@@ -96,19 +96,19 @@ describe("Testing Albums Routes",()=>{
     })
 
     const UpdateAlbumsTestTable=[
-        [999999,{name:"alterando"},HTTP_STATUS.NOT_FOUND],
-        [1,{name:"alterando nome",authors:["jonh teste",'jong yonk pyo'],release_date:new Date()},HTTP_STATUS.OK],
-        [2,{name:"alterando nome2",authors:124124,release_date:new Date()},HTTP_STATUS.BAD_REQUEST],
-        [2,{name:"alterando nome2",authors:[],release_date:new Date()},HTTP_STATUS.OK],
-        [2,{name:"alterando nome2",authors:['lero lero'],release_date:12412412412412},HTTP_STATUS.BAD_REQUEST],
-        [2,{name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.OK],
-        [2,{id:2,name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.BAD_REQUEST],
-        [2,{id:null,name:124124,authors:['lero lero'],release_date:"2000-09-20"},HTTP_STATUS.BAD_REQUEST],
-        [2,{name:null,authors:null,release_date:null},HTTP_STATUS.BAD_REQUEST],
+        [999999,{name:"alterando"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.NOT_FOUND],
+        [1,{name:"alterando nome",authors:["jonh teste",'jong yonk pyo'],release_date:new Date()},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [2,{name:"alterando nome2",authors:124124,release_date:new Date()},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [2,{name:"alterando nome2",authors:[],release_date:new Date()},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [2,{name:"alterando nome2",authors:['lero lero'],release_date:12412412412412},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [2,{name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.OK],
+        [2,{name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},createJWT({id:2,email:"email2@email.com"}),HTTP_STATUS.FORBIDDEN],
+        [2,{id:2,name:"alterando nome3",authors:['lero lero'],release_date:"2000-09-20"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [2,{id:null,name:124124,authors:['lero lero'],release_date:"2000-09-20"},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
+        [2,{name:null,authors:null,release_date:null},createJWT({id:1,email:"email@email.com"}),HTTP_STATUS.BAD_REQUEST],
     ]
-    describe.each(UpdateAlbumsTestTable)("Testing Update Album Id:%d Body:%j",(id,body,expectedStatusCode)=>{
+    describe.each(UpdateAlbumsTestTable)("Testing Update Album Id:%d Body:%j",(id,body,token,expectedStatusCode)=>{
         test("PUT /albums/:id",async ()=>{
-            const token=createJWT({id:1,email:"email@email.com"})
             const res=await request(app).put(`/albums/${id}`).send(body).set('Authorization',token)
             expect(res.statusCode).toBe(expectedStatusCode)
         })

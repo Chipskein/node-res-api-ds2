@@ -122,7 +122,9 @@ export async function GetAlbum(req,res){
 }
 export async function UpdateAlbum(req,res){
     try{
+        const {id:userId}=req.user
         let { id:albumId } =req.params
+
         const {id,name,authors,release_date} = req.body
         if(id){
             throw{
@@ -161,6 +163,16 @@ export async function UpdateAlbum(req,res){
                 message:"Album Not Found"
             }
         }
+        const {dataValues:{userId:albumOwnerId}}=foundAlbum
+        if(userId!=albumOwnerId){
+            throw{
+                status:HTTP_STATUS.FORBIDDEN,
+                message:"You Are not owner of this album"
+            }
+        }
+
+
+
         const updateObj={};
         if(name) updateObj.name=name;
         if(release_date)updateObj.release_date=release_date;
