@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from "../../config/http-status.mjs"
+import { HTTP_STATUS } from "../../consts/http-status.mjs"
 import Musics from "../musics/model.mjs"
 import Albums from "./model.mjs"
 import Users from '../users/model.mjs'

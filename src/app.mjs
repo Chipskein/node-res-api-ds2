@@ -2,8 +2,8 @@ import express from 'express';
 import usersRoutes from './entities/users/routes.mjs';
 import albumsRoutes from './entities/albums/routes.mjs';
 import musicsRoutes from './entities/musics/routes.mjs';
-import { InitDatabase } from './config/sequelize.mjs';
-import { HTTP_STATUS } from './config/http-status.mjs';
+import { InitDatabase } from './database/orm/sequelize.mjs';
+import { HTTP_STATUS } from './consts/http-status.mjs';
 import path from 'path'
 import {fileURLToPath} from 'url';
 const __filename = fileURLToPath(import.meta.url);

@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '../../config/http-status.mjs';
+import { HTTP_STATUS } from '../../consts/http-status.mjs';
 import { hashPassword,verifyPassword } from '../../utils/password.mjs';
 import { VerifyEmailSyntax } from '../../utils/email.mjs';
 import { createJWT } from '../../utils/token.mjs'

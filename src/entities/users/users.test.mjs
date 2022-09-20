@@ -1,9 +1,10 @@
 import {beforeAll, describe,expect,test} from 'vitest'
 import request  from 'supertest'
 import { CreateAppInstace } from '../../app.mjs'
-import { CreateSequelizeInstance, RemoveDatabaseTest } from '../../config/sequelize.mjs';
-import { HTTP_STATUS } from '../../config/http-status.mjs';
+import { CreateSequelizeInstance, RemoveDatabaseTest } from '../../database/orm/sequelize.mjs';
+import { HTTP_STATUS } from '../../consts/http-status.mjs';
 import { createJWT, verifyJWT } from '../../utils/token.mjs';
+
 const database=CreateSequelizeInstance("test")
 const app=CreateAppInstace(database);
 beforeAll(async ()=>{

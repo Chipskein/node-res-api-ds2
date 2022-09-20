@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '../config/http-status.mjs'
+import { HTTP_STATUS } from '../consts/http-status.mjs'
 import Users from '../entities/users/model.mjs';
 import { verifyJWT } from '../utils/token.mjs';
 
