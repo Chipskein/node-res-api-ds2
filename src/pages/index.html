@@ -39,7 +39,7 @@
                 <li>POST    /albums {name,release_date,authors[strings],musics[...music]?} </li>
                 <li>GET     /albums </li>
                 <li>GET     /albums/:id </li>
-                <li>PUT     /albums {name?,release_date?,authors?}/</li>
+                <li>PUT     /albums/:id {name?,release_date?,authors?}/</li>
                 <li>DELETE  /albums {id}</li>
             </ul>
         </div>
@@ -52,7 +52,7 @@
                 <li>POST    /musics {name,duration,formats[strings],authors[strings]?,albumId}</li>
                 <li>GET     /musics</li>
                 <li>GET     /musics/:id</li>
-                <li>PUT     /musics/ {id}</li>
+                <li>PUT     /musics/:id {name?,duration?,formats[strings]?,authors[strings]?,albumId?}</li>
                 <li>DELETE  /musics {id}</li>
             </ul>
         </div>
