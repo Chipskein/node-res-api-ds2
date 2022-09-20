@@ -40,7 +40,7 @@ export async function RegisterUser(req,res){
         return res.status(statusCode).json({ msg: err.message})
     }
 }
-export async function LoginUser(req,res){
+export async function AutenticateUser(req,res){
     try{
         const { email,password} = req.body
         if(!password||!email){

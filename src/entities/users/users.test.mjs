@@ -37,9 +37,9 @@ describe("Testing User Routes",()=>{
         [{email:"user@naoexiste.com.org",password:"123456",},HTTP_STATUS.UNAUTHORIZED],
     ]
 
-    describe.each(LoginUsersTestTable)("Testing Login User \nbody: %j\n \nstatusCode: %d\n",(body,expectedStatusCode)=>{
-        test("POST /users/login",async ()=>{
-            const res=await request(app).post('/users/login').send(body)
+    describe.each(LoginUsersTestTable)("Testing Autenticate User \nbody: %j\n \nstatusCode: %d\n",(body,expectedStatusCode)=>{
+        test("POST /users/oauth",async ()=>{
+            const res=await request(app).post('/users/oauth').send(body)
             expect(res.statusCode).toBe(expectedStatusCode)
             if(res.statusCode==HTTP_STATUS.OK){
                 const {body:{token}} = res

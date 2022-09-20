@@ -17,7 +17,7 @@
           password:string
         }
         
-  * POST    /users/login 
+  * POST    /users/oauth
   
          {
           email:string,
